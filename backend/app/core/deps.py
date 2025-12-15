@@ -1,6 +1,7 @@
 """
 元征 · 合伙人赋能平台 - FastAPI 依赖项
 """
+from datetime import datetime
 from typing import Generator, Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -8,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import SessionLocal
 from app.core.security import decode_access_token
+from app.core.config import settings
 from app.models.user import User
 
 # OAuth2 密码流
@@ -23,6 +25,27 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
+class VirtualSuperAdmin:
+    """虚拟超级管理员（不依赖数据库）"""
+    def __init__(self):
+        self.id = -1
+        self.email = settings.SUPER_ADMIN_EMAIL
+        self.name = settings.SUPER_ADMIN_NAME
+        self.phone = None
+        self.avatar_url = None
+        self.intro = "系统超级管理员"
+        self.is_admin = True
+        self.is_active = True
+        self.is_deleted = False
+        self.highest_role_level = 1
+        self.roles = []
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
+        
+    def can_see_role_level(self, level: int) -> bool:
+        return True  # 超级管理员可以看所有
+
+
 def get_current_user(
     db: Session = Depends(get_db),
     token: str = Depends(oauth2_scheme)
@@ -31,6 +54,7 @@ def get_current_user(
     获取当前登录用户
     
     从 JWT Token 中解析用户 ID，并从数据库获取用户对象
+    支持虚拟超级管理员（id=-1）
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -50,6 +74,10 @@ def get_current_user(
         user_id = int(user_id_str)
     except ValueError:
         raise credentials_exception
+    
+    # 检查是否是超级管理员
+    if user_id == -1 and settings.SUPER_ADMIN_EMAIL:
+        return VirtualSuperAdmin()
     
     user = db.query(User).filter(
         User.id == user_id,

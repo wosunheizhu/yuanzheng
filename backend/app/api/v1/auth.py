@@ -31,6 +31,27 @@ def get_initial_balance(role_code: str) -> int:
         return settings.TOKEN_INITIAL_NORMAL
 
 
+def check_super_admin(username: str, password: str) -> Optional[dict]:
+    """
+    检查是否是超级管理员（不依赖数据库）
+    通过环境变量配置：SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD
+    """
+    if not settings.SUPER_ADMIN_EMAIL or not settings.SUPER_ADMIN_PASSWORD:
+        return None
+    
+    if username == settings.SUPER_ADMIN_EMAIL and password == settings.SUPER_ADMIN_PASSWORD:
+        # 返回虚拟超级管理员信息
+        return {
+            "id": -1,  # 使用负数ID表示虚拟用户
+            "email": settings.SUPER_ADMIN_EMAIL,
+            "name": settings.SUPER_ADMIN_NAME,
+            "is_admin": True,
+            "is_active": True,
+            "highest_role_level": 1,  # 最高权限
+        }
+    return None
+
+
 def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
     """
     认证用户
@@ -74,7 +95,33 @@ def login(
     用户登录
     
     支持通过邮箱、手机号或姓名登录
+    支持超级管理员（不依赖数据库）
     """
+    # 首先检查是否是超级管理员
+    super_admin = check_super_admin(form_data.username, form_data.password)
+    if super_admin:
+        # 超级管理员登录
+        access_token = create_access_token(
+            subject=super_admin["id"],
+            is_admin=True,
+            role_level=1
+        )
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user=UserRead(
+                id=super_admin["id"],
+                email=super_admin["email"],
+                name=super_admin["name"],
+                is_admin=True,
+                is_active=True,
+                highest_role_level=1,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+        )
+    
+    # 普通用户认证
     user = authenticate_user(db, form_data.username, form_data.password)
     
     if not user:
@@ -117,7 +164,33 @@ def login_json(
     用户登录（JSON 格式）
     
     支持通过邮箱、手机号或姓名登录
+    支持超级管理员（不依赖数据库）
     """
+    # 首先检查是否是超级管理员
+    super_admin = check_super_admin(login_data.username, login_data.password)
+    if super_admin:
+        # 超级管理员登录
+        access_token = create_access_token(
+            subject=super_admin["id"],
+            is_admin=True,
+            role_level=1
+        )
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user=UserRead(
+                id=super_admin["id"],
+                email=super_admin["email"],
+                name=super_admin["name"],
+                is_admin=True,
+                is_active=True,
+                highest_role_level=1,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+        )
+    
+    # 普通用户认证
     user = authenticate_user(db, login_data.username, login_data.password)
     
     if not user:
