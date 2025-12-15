@@ -826,8 +826,8 @@ export default function ProjectDetailPage() {
       <div 
         className="sticky top-16 z-20 px-8 py-4"
         style={{ 
-          background: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(18, 18, 18, 0.75)',
+          backdropFilter: 'blur(20px) brightness(1.2)',
           borderBottom: `1px solid ${colors.border}`
         }}
       >
@@ -1782,8 +1782,8 @@ export default function ProjectDetailPage() {
       {/* 加入项目模态框 - 高端简约现代艺术画廊风格 */}
       {showJoinModal && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)' }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-8"
+          style={{ background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(20px) brightness(1.2)' }}
           onClick={(e) => e.target === e.currentTarget && setShowJoinModal(false)}
         >
           <div 
@@ -2078,7 +2078,7 @@ export default function ProjectDetailPage() {
       {showReviewModal && reviewForm.requestId && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(20px) brightness(1.2)' }}
           onClick={(e) => e.target === e.currentTarget && setShowReviewModal(false)}
         >
           <div 
@@ -2288,7 +2288,7 @@ export default function ProjectDetailPage() {
       {showAdjustSharesModal && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(20px) brightness(1.2)' }}
           onClick={(e) => e.target === e.currentTarget && setShowAdjustSharesModal(false)}
         >
           <div 
@@ -2460,7 +2460,7 @@ export default function ProjectDetailPage() {
       {showInviteModal && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(20px) brightness(1.2)' }}
           onClick={(e) => e.target === e.currentTarget && setShowInviteModal(false)}
         >
           <div 
@@ -3170,7 +3170,7 @@ export default function ProjectDetailPage() {
       {showEditEventModal && editingEvent && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(20px) brightness(1.2)' }}
           onClick={(e) => e.target === e.currentTarget && setShowEditEventModal(false)}
         >
           <div 
@@ -3301,7 +3301,7 @@ export default function ProjectDetailPage() {
       {showEventHistory && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(18, 18, 18, 0.75)', backdropFilter: 'blur(20px) brightness(1.2)' }}
           onClick={(e) => e.target === e.currentTarget && setShowEventHistory(false)}
         >
           <div 
