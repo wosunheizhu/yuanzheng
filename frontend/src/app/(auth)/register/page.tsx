@@ -26,7 +26,7 @@ const colors = {
 const roleOptions = [
   { value: 'FOUNDING', label: '联合创始人', description: '核心创始团队成员' },
   { value: 'CORE', label: '核心合伙人', description: '核心业务骨干' },
-  { value: 'REGULAR', label: '普通合伙人', description: '正式合伙人成员' },
+  { value: 'NORMAL', label: '普通合伙人', description: '正式合伙人成员' },
 ]
 
 export default function RegisterPage() {
@@ -45,7 +45,7 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
     organization: '',
-    role_type: 'REGULAR',
+    role_type: 'NORMAL',
     invitation_code: '',
     agree_terms: false,
   })
