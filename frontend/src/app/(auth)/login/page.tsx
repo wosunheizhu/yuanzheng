@@ -54,8 +54,10 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
+    
+    // 先清除错误
     setError('')
+    setIsLoading(true)
     
     try {
       const response = await authService.login(email, password)
@@ -77,11 +79,14 @@ export default function LoginPage() {
       
       // 跳转到首页（漩涡页面）
       window.location.href = HOMEPAGE_URL
-    } catch (err) {
-      setError(getErrorMessage(err))
-    } finally {
+    } catch (err: unknown) {
+      const errorMsg = getErrorMessage(err) || '登录失败，请检查账号密码'
+      setError(errorMsg)
       setIsLoading(false)
+      return // 确保不继续执行
     }
+    
+    setIsLoading(false)
   }
 
   return (
@@ -109,12 +114,12 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <Link href={HOMEPAGE_URL} className="flex items-center gap-2">
-          <div className="grid grid-cols-2 gap-1">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: colors.text }} />
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: colors.text }} />
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: colors.text }} />
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: colors.text }} />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="元征" 
+            className="h-7 w-auto"
+            style={{ filter: 'brightness(0) invert(1)' }}
+          />
           <span 
             className="text-sm"
             style={{ 
@@ -169,12 +174,12 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <div className="grid grid-cols-2 gap-1.5">
-            <span className="w-3 h-3 rounded-full" style={{ background: colors.text }} />
-            <span className="w-3 h-3 rounded-full" style={{ background: colors.text }} />
-            <span className="w-3 h-3 rounded-full" style={{ background: colors.text }} />
-            <span className="w-3 h-3 rounded-full" style={{ background: colors.text }} />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="元征" 
+            className="h-16 w-auto"
+            style={{ filter: 'brightness(0) invert(1)' }}
+          />
         </div>
 
         {/* 标题 */}
@@ -198,20 +203,24 @@ export default function LoginPage() {
 
         {/* 登录表单 */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* 错误提示 */}
-          {error && (
-            <div 
-              className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm"
-              style={{ 
-                background: 'rgba(239, 68, 68, 0.15)',
-                border: `1px solid ${colors.error}`,
-                color: colors.error
-              }}
-            >
-              <AlertCircle size={16} />
-              <span>{error}</span>
-            </div>
-          )}
+          {/* 错误提示 - 始终渲染，通过透明度控制显隐 */}
+          <div 
+            className="flex items-center gap-3 px-4 py-3 text-sm transition-all duration-300"
+            style={{ 
+              background: error ? 'rgba(239, 68, 68, 0.1)' : 'transparent',
+              border: `1px solid ${error ? 'rgba(239, 68, 68, 0.3)' : 'transparent'}`,
+              borderRadius: '2px',
+              color: 'rgba(239, 68, 68, 0.9)',
+              opacity: error ? 1 : 0,
+              height: error ? 'auto' : 0,
+              padding: error ? '12px 16px' : 0,
+              marginBottom: error ? 0 : '-20px',
+              overflow: 'hidden'
+            }}
+          >
+            <AlertCircle size={16} strokeWidth={1.5} />
+            <span>{error || ''}</span>
+          </div>
           
           {/* 邮箱/手机号 */}
           <div>

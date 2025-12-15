@@ -163,13 +163,13 @@ export default function RegisterPage() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href={HOMEPAGE_URL}>
-            <h1
-              className="text-3xl font-serif tracking-wider cursor-pointer hover:opacity-80 transition-opacity"
-              style={{ color: colors.text }}
-            >
-              元 征
-            </h1>
+          <Link href={HOMEPAGE_URL} className="inline-block hover:opacity-80 transition-opacity">
+            <img 
+              src="/logo.png" 
+              alt="元征" 
+              className="h-14 w-auto mx-auto mb-3"
+              style={{ filter: 'brightness(0) invert(1)' }}
+            />
           </Link>
           <p className="mt-2" style={{ color: colors.textSecondary }}>
             合伙人赋能平台
