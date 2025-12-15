@@ -99,32 +99,57 @@ export default function FloatingNav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // 获取未读消息数量
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      if (!user) return
-      
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
-      try {
-        const response = await fetch(`${API_URL}/notifications/inbox/stats`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          }
-        })
-        if (response.ok) {
-          const stats = await response.json()
-          setUnreadCount(stats.total_unread || 0)
+  // 获取未读消息数量 - 优化刷新频率
+  const fetchUnreadCount = useCallback(async () => {
+    if (!user) return
+    
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+    try {
+      const response = await fetch(`${API_URL}/notifications/inbox/stats`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
-      } catch (error) {
-        console.error('Failed to fetch unread count:', error)
+      })
+      if (response.ok) {
+        const stats = await response.json()
+        setUnreadCount(stats.total_unread || 0)
+      }
+    } catch (error) {
+      console.error('Failed to fetch unread count:', error)
+    }
+  }, [user])
+
+  // 定时轮询 - 每5秒刷新一次（提高响应速度）
+  useEffect(() => {
+    fetchUnreadCount()
+    const interval = setInterval(fetchUnreadCount, 5000)
+    return () => clearInterval(interval)
+  }, [fetchUnreadCount])
+
+  // 页面切换时立即刷新
+  useEffect(() => {
+    fetchUnreadCount()
+  }, [pathname, fetchUnreadCount])
+
+  // 用户回到页面时立即刷新
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchUnreadCount()
       }
     }
-
-    fetchUnreadCount()
-    // 每30秒刷新一次未读数量
-    const interval = setInterval(fetchUnreadCount, 30000)
-    return () => clearInterval(interval)
-  }, [user])
+    const handleFocus = () => {
+      fetchUnreadCount()
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [fetchUnreadCount])
 
   // 入场动画 - 使用 ref 防止动画重复执行
   const hasAnimated = useRef(false)
