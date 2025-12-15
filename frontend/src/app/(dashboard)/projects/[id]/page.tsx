@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { gsap } from 'gsap'
+import { toast } from 'sonner'
 import { 
   ArrowLeft,
   Briefcase,
