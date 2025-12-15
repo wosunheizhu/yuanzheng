@@ -161,8 +161,8 @@ export default function TokenPage() {
       
       try {
         setUserSearching(true)
-        const users = await userService.list({ search: transferToSearch.trim(), limit: 20 })
-        setUserSearchResults(users.filter(u => u.id !== user?.id) || [])
+        const response = await userService.list({ search: transferToSearch.trim(), limit: 20 })
+        setUserSearchResults(response.items.filter(u => u.id !== user?.id) || [])
       } catch (err) {
         console.error('Failed to search users:', err)
       } finally {
