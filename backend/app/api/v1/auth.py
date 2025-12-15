@@ -31,32 +31,82 @@ def get_initial_balance(role_code: str) -> int:
         return settings.TOKEN_INITIAL_NORMAL
 
 
-def check_super_admin(username: str, password: str) -> Optional[dict]:
+def get_or_create_super_admin(db: Session) -> User:
     """
-    检查是否是超级管理员（不依赖数据库）
-    通过环境变量配置：SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD
+    获取或创建超级管理员用户
+    如果数据库中存在，直接返回；否则创建一个新的
     """
-    if not settings.SUPER_ADMIN_EMAIL or not settings.SUPER_ADMIN_PASSWORD:
-        return None
+    # 先查找数据库中是否已存在超级管理员
+    user = db.query(User).filter(
+        User.email == settings.SUPER_ADMIN_EMAIL,
+        User.is_deleted == False
+    ).first()
     
-    if username == settings.SUPER_ADMIN_EMAIL and password == settings.SUPER_ADMIN_PASSWORD:
-        # 返回虚拟超级管理员信息
-        return {
-            "id": -1,  # 使用负数ID表示虚拟用户
-            "email": settings.SUPER_ADMIN_EMAIL,
-            "name": settings.SUPER_ADMIN_NAME,
-            "is_admin": True,
-            "is_active": True,
-            "highest_role_level": 1,  # 最高权限
-        }
-    return None
+    if user:
+        # 确保是管理员
+        if not user.is_admin:
+            user.is_admin = True
+            db.commit()
+        return user
+    
+    # 不存在，创建新的超级管理员
+    # 首先获取或创建 FOUNDING 角色
+    founding_role = db.query(Role).filter(Role.code == "FOUNDING").first()
+    if not founding_role:
+        founding_role = Role(
+            name="创始合伙人",
+            code="FOUNDING",
+            role_level=100,
+            description="系统创始合伙人"
+        )
+        db.add(founding_role)
+        db.flush()
+    
+    # 创建超级管理员用户
+    user = User(
+        name=settings.SUPER_ADMIN_NAME,
+        email=settings.SUPER_ADMIN_EMAIL,
+        phone="",
+        hashed_password=get_password_hash(settings.SUPER_ADMIN_PASSWORD),
+        is_active=True,
+        is_admin=True,
+        organization_public=True,
+        contact_public=False,
+        address_public=False,
+    )
+    db.add(user)
+    db.flush()
+    
+    # 分配 FOUNDING 角色
+    user_role = UserRole(user_id=user.id, role_id=founding_role.id)
+    db.add(user_role)
+    
+    # 创建 Token 账户
+    token_account = TokenAccount(
+        user_id=user.id,
+        balance=settings.TOKEN_INITIAL_FOUNDING,
+        total_earned=settings.TOKEN_INITIAL_FOUNDING,
+        total_spent=0
+    )
+    db.add(token_account)
+    
+    db.commit()
+    db.refresh(user)
+    
+    return user
 
 
 def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
     """
     认证用户
     支持：用户名（手机/邮箱）+ 密码
+    
+    超级管理员会在首次登录时自动创建到数据库中
     """
+    # 首先检查是否是超级管理员凭据
+    if username == settings.SUPER_ADMIN_EMAIL and password == settings.SUPER_ADMIN_PASSWORD:
+        return get_or_create_super_admin(db)
+    
     # 尝试通过邮箱查找
     user = db.query(User).filter(
         User.email == username,
@@ -95,33 +145,7 @@ def login(
     用户登录
     
     支持通过邮箱、手机号或姓名登录
-    支持超级管理员（不依赖数据库）
     """
-    # 首先检查是否是超级管理员
-    super_admin = check_super_admin(form_data.username, form_data.password)
-    if super_admin:
-        # 超级管理员登录
-        access_token = create_access_token(
-            subject=super_admin["id"],
-            is_admin=True,
-            role_level=1
-        )
-        return Token(
-            access_token=access_token,
-            token_type="bearer",
-            user=UserRead(
-                id=super_admin["id"],
-                email=super_admin["email"],
-                name=super_admin["name"],
-                is_admin=True,
-                is_active=True,
-                highest_role_level=1,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-        )
-    
-    # 普通用户认证
     user = authenticate_user(db, form_data.username, form_data.password)
     
     if not user:
@@ -164,33 +188,7 @@ def login_json(
     用户登录（JSON 格式）
     
     支持通过邮箱、手机号或姓名登录
-    支持超级管理员（不依赖数据库）
     """
-    # 首先检查是否是超级管理员
-    super_admin = check_super_admin(login_data.username, login_data.password)
-    if super_admin:
-        # 超级管理员登录
-        access_token = create_access_token(
-            subject=super_admin["id"],
-            is_admin=True,
-            role_level=1
-        )
-        return Token(
-            access_token=access_token,
-            token_type="bearer",
-            user=UserRead(
-                id=super_admin["id"],
-                email=super_admin["email"],
-                name=super_admin["name"],
-                is_admin=True,
-                is_active=True,
-                highest_role_level=1,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-        )
-    
-    # 普通用户认证
     user = authenticate_user(db, login_data.username, login_data.password)
     
     if not user:
