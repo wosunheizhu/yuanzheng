@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { gsap } from 'gsap'
-import { ArrowLeft, Mail, AlertCircle, Check, Loader2 } from 'lucide-react'
+import { ArrowLeft, Mail, AlertCircle, Check, Loader2, MessageSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import { getErrorMessage } from '@/lib/api'
 
 // Homepage URL
 const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
 
 // 颜色常量
 const colors = {
@@ -22,12 +22,10 @@ const colors = {
 }
 
 export default function ForgotPasswordPage() {
-  const router = useRouter()
-  const [step, setStep] = useState(1) // 1: 输入邮箱, 2: 发送成功
+  const [step, setStep] = useState(1) // 1: 输入邮箱, 2: 提交成功
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [countdown, setCountdown] = useState(0)
   
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -46,14 +44,6 @@ export default function ForgotPasswordPage() {
       })
     }
   }, [step])
-
-  // 倒计时
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
-      return () => clearTimeout(timer)
-    }
-  }, [countdown])
 
   const validateEmail = () => {
     if (!email.trim()) {
@@ -75,33 +65,23 @@ export default function ForgotPasswordPage() {
     setError('')
     
     try {
-      // TODO: 调用发送重置邮件 API
-      // await authService.sendResetPasswordEmail(email)
+      // 调用密码重置请求 API
+      const response = await fetch(`${API_URL}/auth/password-reset-request?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
       
-      // 模拟发送成功
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.detail || '提交失败')
+      }
       
       setStep(2)
-      setCountdown(60)
-      toast.success('重置邮件已发送！')
-    } catch (err: any) {
+      toast.success('已通知管理员！')
+    } catch (err: unknown) {
       setError(getErrorMessage(err))
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleResend = async () => {
-    if (countdown > 0) return
-    
-    setIsLoading(true)
-    try {
-      // TODO: 调用重新发送 API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setCountdown(60)
-      toast.success('重置邮件已重新发送！')
-    } catch (err) {
-      toast.error('发送失败，请稍后重试')
     } finally {
       setIsLoading(false)
     }
@@ -149,12 +129,12 @@ export default function ForgotPasswordPage() {
             className="text-2xl font-medium mb-2"
             style={{ color: colors.text }}
           >
-            {step === 1 ? '忘记密码' : '邮件已发送'}
+            {step === 1 ? '忘记密码' : '申请已提交'}
           </h2>
           <p style={{ color: colors.textSecondary }}>
             {step === 1
-              ? '请输入您的注册邮箱，我们将发送密码重置链接'
-              : '请检查您的邮箱并点击重置链接'}
+              ? '请输入您的注册邮箱，我们将通知管理员为您重置密码'
+              : '管理员将尽快处理您的请求'}
           </p>
         </div>
 
@@ -227,7 +207,7 @@ export default function ForgotPasswordPage() {
                 {isLoading ? (
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
-                  '发送重置链接'
+                  '提交申请'
                 )}
               </button>
             </form>
@@ -242,45 +222,46 @@ export default function ForgotPasswordPage() {
               </div>
 
               {/* 提示信息 */}
-              <p className="mb-4" style={{ color: colors.text }}>
-                重置链接已发送至
+              <p className="mb-4 text-lg" style={{ color: colors.text }}>
+                申请已提交
               </p>
               <p
-                className="font-medium mb-6"
+                className="font-medium mb-4"
                 style={{ color: colors.text }}
               >
                 {email}
               </p>
-              <p className="text-sm mb-6" style={{ color: colors.textSecondary }}>
-                如果没有收到邮件，请检查垃圾邮件文件夹
-              </p>
+              
+              {/* 说明 */}
+              <div 
+                className="p-4 rounded-lg mb-6 text-left"
+                style={{ 
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: `1px solid ${colors.border}`
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <MessageSquare size={18} style={{ color: colors.textSecondary, marginTop: 2 }} />
+                  <div>
+                    <p className="text-sm mb-2" style={{ color: colors.text }}>
+                      管理员已收到您的密码重置申请
+                    </p>
+                    <p className="text-xs" style={{ color: colors.textSecondary }}>
+                      管理员核实身份后，将通过邮件告知您的密码。请注意查收邮件，包括垃圾邮件文件夹。
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-              {/* 重新发送按钮 */}
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={countdown > 0 || isLoading}
-                className="w-full py-3 rounded-lg font-medium transition-all hover:opacity-80 disabled:opacity-50"
+              {/* 返回登录 */}
+              <Link
+                href="/login"
+                className="inline-block w-full py-3 rounded-lg font-medium transition-all hover:opacity-80"
                 style={{
                   background: 'transparent',
                   border: `1px solid ${colors.border}`,
                   color: colors.text,
                 }}
-              >
-                {countdown > 0 ? (
-                  `${countdown}秒后可重新发送`
-                ) : isLoading ? (
-                  <Loader2 size={18} className="animate-spin inline" />
-                ) : (
-                  '重新发送'
-                )}
-              </button>
-
-              {/* 返回登录 */}
-              <Link
-                href="/login"
-                className="block mt-4 text-sm hover:underline"
-                style={{ color: colors.textSecondary }}
               >
                 返回登录
               </Link>
@@ -306,4 +287,3 @@ export default function ForgotPasswordPage() {
     </div>
   )
 }
-

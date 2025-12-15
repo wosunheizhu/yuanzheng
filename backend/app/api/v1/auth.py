@@ -352,6 +352,46 @@ def self_register(
     return user_read
 
 
+@router.post("/password-reset-request")
+def request_password_reset(
+    email: str,
+    db: Session = Depends(get_db)
+):
+    """
+    用户申请密码重置（公开接口，无需认证）
+    
+    创建一条反馈记录给管理员处理
+    """
+    from app.models.community import Feedback, FeedbackStatus
+    
+    # 检查用户是否存在
+    user = db.query(User).filter(
+        User.email == email,
+        User.is_deleted == False
+    ).first()
+    
+    if not user:
+        # 不暴露用户是否存在的信息，但仍然返回成功
+        return {"message": "如果该邮箱已注册，管理员将会联系您"}
+    
+    # 创建一条反馈记录
+    feedback = Feedback(
+        user_id=user.id,
+        category="PASSWORD_RESET",
+        title=f"密码重置申请 - {user.name}",
+        content=f"用户 {user.name}（邮箱：{email}）申请重置密码，请管理员处理并通过邮件告知用户原密码或新密码。",
+        contact=email,
+        allow_contact=True,
+        status=FeedbackStatus.OPEN,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    db.add(feedback)
+    db.commit()
+    
+    return {"message": "已通知管理员，请等待管理员通过邮件联系您"}
+
+
 @router.get("/roles", response_model=list[RoleRead])
 def list_roles(db: Session = Depends(get_db)):
     """获取所有角色列表"""
