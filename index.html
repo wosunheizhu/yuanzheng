@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>元征 · 合伙人赋能平台</title>
+  <link rel="stylesheet" href="/src/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600&family=Playfair+Display:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body class="dark">
+  <!-- 加载动画 - 仿cosmos风格 -->
+  <div class="loader" id="loader">
+    <!-- 浅色背景层 -->
+    <div class="loader__bg" id="loaderBg"></div>
+    <!-- 加载百分比 -->
+    <div class="loader__percentage" id="loaderPercentage">0%</div>
+    <!-- 黑色晕染扩散层 -->
+    <div class="loader__reveal" id="loaderReveal"></div>
+  </div>
+
+  <!-- Cookie 提示 -->
+  <div class="cookie-notice" id="cookieNotice">
+    <span>This website uses <a href="#">cookies</a>.</span>
+    <button class="cookie-accept" id="cookieAccept">Accept</button>
+  </div>
+
+  <!-- 滚动提示 -->
+  <div class="scroll-hint" id="scrollHint">
+    <span>Scroll to explore</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
+
+  <!-- 导航栏 -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <!-- Logo -->
+      <a href="#" class="header__logo" data-nav-home>
+        <img src="./public/logo.png" alt="元征" class="header__logomark-img" />
+        <span class="header__logo-text">元征</span>
+      </a>
+      
+      <!-- 分隔线 -->
+      <div class="header__divider"></div>
+      
+      <!-- 主导航 - 3个常用 + 更多 -->
+      <nav class="header__nav">
+        <a href="http://localhost:3000/projects" class="header__nav-link" data-nav-transition>
+          <span class="header__nav-text">项目</span>
+          <span class="header__nav-text">项目</span>
+        </a>
+        <a href="http://localhost:3000/resources" class="header__nav-link" data-nav-transition>
+          <span class="header__nav-text">资源</span>
+          <span class="header__nav-text">资源</span>
+        </a>
+        <a href="http://localhost:3000/partners" class="header__nav-link" data-nav-transition>
+          <span class="header__nav-text">合伙人</span>
+          <span class="header__nav-text">合伙人</span>
+        </a>
+        
+        <!-- 更多下拉菜单 -->
+        <div class="header__dropdown" id="headerDropdown">
+          <button class="header__nav-link header__dropdown-trigger" id="dropdownTrigger">
+            <span class="header__nav-text">更多</span>
+            <span class="header__nav-text">更多</span>
+            <svg class="header__dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="header__dropdown-menu" id="dropdownMenu">
+            <a href="http://localhost:3000/dashboard" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              仪表盘
+            </a>
+            <a href="http://localhost:3000/token" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+              Token
+            </a>
+            <div class="header__dropdown-divider"></div>
+            <a href="http://localhost:3000/meetings" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              座谈会
+            </a>
+            <a href="http://localhost:3000/schedule" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              时间表
+            </a>
+            <a href="http://localhost:3000/inbox" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              信箱
+            </a>
+            <a href="http://localhost:3000/messages" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              私信
+            </a>
+            <a href="http://localhost:3000/community" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              社群
+            </a>
+            <a href="http://localhost:3000/demands" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              需求中心
+            </a>
+            <a href="http://localhost:3000/feedback" class="header__dropdown-item" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              意见反馈
+            </a>
+            <a href="http://localhost:3000/admin" class="header__dropdown-item header__dropdown-item--admin" data-nav-transition>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              管理员控制台
+            </a>
+            <div class="header__dropdown-divider"></div>
+            <a href="#sectionExpression" class="header__dropdown-item" data-nav-scroll>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              关于元征
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- 分隔线 -->
+      <div class="header__divider"></div>
+
+      <!-- 右侧操作区 -->
+      <div class="header__actions">
+        <!-- 搜索按钮 -->
+        <button class="header__icon-btn" id="searchBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        
+        <!-- 通知按钮 - 链接到信箱 -->
+        <a href="http://localhost:3000/inbox" class="header__icon-btn header__icon-btn--notification" id="notificationBtn" data-nav-transition>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="header__notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </a>
+        
+        <!-- 用户头像/个人中心 -->
+        <a href="http://localhost:3000/profile" class="header__user" id="userProfileLink" data-nav-transition>
+          <div class="header__user-avatar" id="userAvatar">U</div>
+          <span class="header__user-name" id="userName">用户</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容 -->
+  <main class="main" id="smoothContent">
+    <!-- Hero Section - 图片漩涡效果 -->
+    <section class="hero" id="hero">
+      <!-- 图片漩涡容器 -->
+      <div class="vortex-container" id="vortexContainer">
+        <!-- 漩涡图片会通过JS动态生成 -->
+      </div>
+      
+      <!-- 中心消失点 -->
+      <div class="vortex-center" id="vortexCenter"></div>
+      
+      <div class="hero__content">
+        <h1 class="hero__title">元征<sup>©</sup></h1>
+        <p class="hero__subtitle">星海之途</p>
+      </div>
+    </section>
+
+
+    <!-- Section 3: Gallery - 功能模块卡片 -->
+    <section class="section section--gallery" id="sectionGallery">
+      <!-- 右下角Logo -->
+      <div class="follow-image follow-image--4">
+        <div class="logo-card">
+          <img src="./public/logo.png" alt="元征" class="logo-card__img" />
+        </div>
+      </div>
+      
+      <div class="gallery">
+        <!-- 仪表盘 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/dashboard">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="14" y="14" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/>
+              </svg>
+              <span class="feature-card__title">仪表盘</span>
+            </div>
+            <div class="feature-card__back">
+              <p>总览个人数据、项目进展、Token余额与最新动态</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Token -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/token">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v12M6 12h12"/>
+              </svg>
+              <span class="feature-card__title">Token</span>
+            </div>
+            <div class="feature-card__back">
+              <p>管理您的贡献积分，发起转账，查看交易历史</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 项目 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/projects">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span class="feature-card__title">项目</span>
+            </div>
+            <div class="feature-card__back">
+              <p>浏览、创建与管理项目，跟踪项目进度与股权分配</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 资源 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/resources">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+              <span class="feature-card__title">资源</span>
+            </div>
+            <div class="feature-card__back">
+              <p>共享行业资源、人脉关系与专业能力</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 合伙人 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/partners">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span class="feature-card__title">合伙人</span>
+            </div>
+            <div class="feature-card__back">
+              <p>探索合伙人网络，查看成员详情与联系方式</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 座谈会 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/meetings">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <span class="feature-card__title">座谈会</span>
+            </div>
+            <div class="feature-card__back">
+              <p>安排会议、邀请嘉宾、记录会议纪要</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 社群 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/community">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span class="feature-card__title">社群</span>
+            </div>
+            <div class="feature-card__back">
+              <p>发布动态、参与讨论、私信交流</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 需求中心 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/demands">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <span class="feature-card__title">需求中心</span>
+            </div>
+            <div class="feature-card__back">
+              <p>发布需求、响应需求、匹配资源</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 时间表 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/schedule">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span class="feature-card__title">时间表</span>
+            </div>
+            <div class="feature-card__back">
+              <p>管理您的空闲时间，查看他人档期，便捷约定会议</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 信箱 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/inbox">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span class="feature-card__title">信箱</span>
+            </div>
+            <div class="feature-card__back">
+              <p>接收系统通知、项目邀请与重要提醒</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 私信 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/messages">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+              <span class="feature-card__title">私信</span>
+            </div>
+            <div class="feature-card__back">
+              <p>与合伙人一对一沟通，分享资源与项目</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 意见反馈 -->
+        <div class="gallery__item feature-card" data-href="http://localhost:3000/feedback">
+          <div class="feature-card__inner">
+            <div class="feature-card__front">
+              <svg class="feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                <line x1="9" y1="10" x2="15" y2="10"/>
+                <line x1="12" y1="7" x2="12" y2="13"/>
+              </svg>
+              <span class="feature-card__title">意见反馈</span>
+            </div>
+            <div class="feature-card__back">
+              <p>提交平台建议与问题反馈，帮助我们改进</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 引用卡片 -->
+        <div class="gallery__item gallery__item--quote">
+          <p>"I am always doing things I can't do; that's how I get to do them."</p>
+          <cite>— Picasso</cite>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Curate - 整合资源 -->
+    <section class="section section--curate" id="sectionCurate">
+      <div class="section__split">
+        <div class="section__left">
+          <!-- 粒子Logo -->
+          <div class="particle-logo-container">
+            <canvas id="particleLogo"></canvas>
+          </div>
+        </div>
+        <div class="section__right section__right--text">
+          <h2 class="section__title split-text">整合资源  共同成长</h2>
+          <h3 class="section__subtitle">赋能上市公司 · 成就万亿市值</h3>
+          <ul class="section__slogans">
+            <li>用区块链记录信任，用Token驱动合作</li>
+            <li>从协作到共赢，让每一次贡献都被看见</li>
+            <li>连接人脉与资源，重塑金融协作网络</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 全局搜索模态框 -->
+  <div class="search-modal" id="searchModal">
+    <div class="search-modal__backdrop" id="searchBackdrop"></div>
+    <div class="search-modal__container">
+      <div class="search-modal__box">
+        <div class="search-modal__header">
+          <svg class="search-modal__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            class="search-modal__input" 
+            id="searchInput" 
+            placeholder="搜索项目、合伙人、资源..."
+            autocomplete="off"
+          />
+          <div class="search-modal__loading" id="searchLoading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"></circle>
+            </svg>
+          </div>
+          <kbd class="search-modal__kbd">ESC</kbd>
+        </div>
+        
+        <div class="search-modal__results" id="searchResults">
+          <!-- 搜索结果会通过 JS 动态生成 -->
+        </div>
+        
+        <div class="search-modal__empty" id="searchEmpty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <p>未找到相关结果</p>
+        </div>
+        
+        <div class="search-modal__hint" id="searchHint">
+          <p>输入关键词搜索项目、合伙人或资源</p>
+          <div class="search-modal__categories">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+              项目
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              合伙人
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18"></path>
+                <path d="M9 8h1"></path>
+                <path d="M9 12h1"></path>
+                <path d="M9 16h1"></path>
+                <path d="M14 8h1"></path>
+                <path d="M14 12h1"></path>
+                <path d="M14 16h1"></path>
+                <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path>
+              </svg>
+              资源
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="search-modal__footer">
+        按 <kbd>⌘</kbd> + <kbd>K</kbd> 快速打开搜索
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
+

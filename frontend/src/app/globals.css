@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   与营销首页完全一致的设计系统
+======================================== */
+
+/* 导入字体 */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600&family=Playfair+Display:wght@300;400&display=swap');
+
+/* CSS 变量 - 与营销首页 style.css 完全一致 */
+:root {
+  /* Colors - Dark Theme */
+  --color-bg: #000000;
+  --color-bg-secondary: #0a0a0a;
+  --color-text: #faf9f6;
+  --color-text-secondary: #888888;
+  --color-border: #333333;
+  --color-accent: #faf9f6;
+  
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-serif-sc: 'Noto Serif SC', 'Songti SC', serif;
+  
+  /* Spacing */
+  --section-padding: 120px;
+  --container-width: 1200px;
+  
+  /* Transitions */
+  --transition-fast: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-medium: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ========================================
+   与营销首页一致的组件样式
+======================================== */
+
+/* 胶囊按钮 - 主要 */
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 font-medium text-sm;
+    border-radius: 50px;
+    background: var(--color-text);
+    color: var(--color-bg);
+    transition: transform var(--transition-fast), opacity var(--transition-fast);
+  }
+  
+  .btn-primary:hover {
+    @apply opacity-90;
+    transform: scale(1.02);
+  }
+  
+  /* 胶囊按钮 - 边框 */
+  .btn-outline {
+    @apply px-6 py-3 font-medium text-sm;
+    border-radius: 50px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+  
+  .btn-outline:hover {
+    border-color: var(--color-text);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* 毛玻璃卡片 */
+  .glass-card {
+    background: rgba(30, 30, 30, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+  }
+  
+  /* 毛玻璃导航栏 */
+  .glass-nav {
+    background: rgba(30, 30, 30, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: 50px;
+  }
+  
+  /* 输入框 - 与营销首页风格一致 */
+  .input-field {
+    @apply w-full px-5 py-3 text-sm;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+  
+  .input-field::placeholder {
+    color: var(--color-text-secondary);
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: var(--color-text);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  /* 标签 */
+  .tag {
+    @apply px-4 py-2 text-xs;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+  }
+  
+  .tag:hover {
+    border-color: var(--color-text);
+    color: var(--color-text);
+  }
+  
+  /* 圆角工具类 */
+  .rounded-pill {
+    border-radius: 50px;
+  }
+  
+  .rounded-button {
+    border-radius: 12px;
+  }
+  
+  .rounded-card {
+    border-radius: 16px;
+  }
+  
+  /* 中文衬线标题 */
+  .title-serif-cn {
+    font-family: var(--font-serif-sc);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  
+  /* 英文衬线标题 */
+  .title-serif {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* ========================================
+   滚动条样式
+======================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* ========================================
+   导航悬浮效果 - 与营销首页一致
+======================================== */
+.nav-link {
+  position: relative;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-link-text {
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.nav-link:hover .nav-link-text:first-child {
+  transform: translateY(-100%);
+}
+
+.nav-link:hover .nav-link-text:last-child {
+  transform: translateY(-100%);
+}
+
+/* ========================================
+   页面过渡动画
+======================================== */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================
+   GSAP 动画入场 - 防止闪烁
+======================================== */
+
+/* 需要 GSAP 动画的元素初始隐藏 */
+.animate-in {
+  opacity: 0;
+}
+
+/* Hero 区域的子元素初始隐藏，由 GSAP 控制显示 */
+.gsap-hero > * {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Grid 区域的子元素初始隐藏 */
+.gsap-grid > * {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+
+/* Stats 区域的子元素初始隐藏 */
+.gsap-stats > * {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Content 区域的子元素初始隐藏 */
+.gsap-content > * {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* ========================================
+   选择框/下拉菜单样式
+======================================== */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+/* ========================================
+   表格样式
+======================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ========================================
+   加载动画
+======================================== */
+.loader-dot {
+  @apply w-2 h-2 rounded-full;
+  background: var(--color-text);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loader-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loader-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

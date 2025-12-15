@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Token Bridge</title>
+</head>
+<body>
+<script>
+  // 将 token 发送给父页面
+  const token = localStorage.getItem('access_token');
+  if (window.parent !== window) {
+    window.parent.postMessage({
+      type: 'TOKEN_BRIDGE',
+      token: token
+    }, '*');
+  }
+</script>
+</body>
+</html>
+

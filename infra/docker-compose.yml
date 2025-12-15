@@ -1,0 +1,41 @@
+# 元征 · 合伙人赋能平台 - Docker Compose 配置
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:16-alpine
+    container_name: yuanzheng_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-yuanzheng}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yuanzheng}
+      POSTGRES_DB: ${POSTGRES_DB:-yuanzheng}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yuanzheng}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 缓存（可选）
+  redis:
+    image: redis:7-alpine
+    container_name: yuanzheng_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+
