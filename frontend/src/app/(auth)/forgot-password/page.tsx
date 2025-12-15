@@ -8,6 +8,9 @@ import { ArrowLeft, Mail, AlertCircle, Check, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getErrorMessage } from '@/lib/api'
 
+// Homepage URL
+const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
+
 // 颜色常量
 const colors = {
   bg: '#000000',
@@ -115,7 +118,7 @@ export default function ForgotPasswordPage() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="http://localhost:3847">
+          <Link href={HOMEPAGE_URL}>
             <h1
               className="text-3xl font-serif tracking-wider cursor-pointer hover:opacity-80 transition-opacity"
               style={{ color: colors.text }}

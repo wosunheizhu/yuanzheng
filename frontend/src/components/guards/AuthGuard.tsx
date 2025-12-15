@@ -188,9 +188,11 @@ interface GuestGuardProps {
   redirectTo?: string
 }
 
+const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
+
 export function GuestGuard({
   children,
-  redirectTo = 'http://localhost:3847'
+  redirectTo = HOMEPAGE_URL
 }: GuestGuardProps) {
   const router = useRouter()
   const { isAuthenticated, isLoading } = useAuthStore()

@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { gsap } from 'gsap'
 import { ArrowRight } from 'lucide-react'
 
+// Homepage URL
+const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
+
 // 颜色常量
 const colors = {
   bg: '#000000',
@@ -67,7 +70,7 @@ export default function WelcomePage() {
         </div>
         <div className="flex items-center gap-6">
           <a 
-            href="http://localhost:3847" 
+            href={HOMEPAGE_URL} 
             className="text-sm transition-colors duration-300 hover:opacity-80"
             style={{ color: colors.textSecondary }}
           >

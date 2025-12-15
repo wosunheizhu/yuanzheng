@@ -29,6 +29,9 @@ import {
 import { useAuthStore } from '@/store/auth'
 import { projectService, userService, resourceService } from '@/lib/services'
 
+// Homepage URL - 使用环境变量或默认值
+const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
+
 // 颜色常量
 const colors = {
   bg: '#000000',
@@ -57,7 +60,7 @@ const moreNavItems = [
   { name: '需求中心', href: '/demands', icon: Briefcase },
   { name: '意见反馈', href: '/feedback', icon: MessageSquare },
   { name: '---divider2---', href: '', icon: null, divider: true },
-  { name: '关于元征', href: 'http://localhost:3847#sectionExpression', icon: Info, external: true },
+  { name: '关于元征', href: `${HOMEPAGE_URL}#sectionExpression`, icon: Info, external: true },
 ]
 
 // 搜索结果类型
@@ -276,7 +279,7 @@ export default function FloatingNav() {
       >
         <div className="flex items-center" style={{ gap: '24px' }}>
           {/* Logo */}
-          <a href="http://localhost:3847" className="flex items-center gap-2">
+          <a href={HOMEPAGE_URL} className="flex items-center gap-2">
             <img 
               src="/logo.png" 
               alt="元征" 

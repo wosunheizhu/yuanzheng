@@ -9,6 +9,9 @@ import { authService } from '@/lib/services'
 import { useAuthStore } from '@/store/auth'
 import { getErrorMessage } from '@/lib/api'
 
+// Homepage URL
+const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
+
 // 颜色常量
 const colors = {
   bg: '#000000',
@@ -73,7 +76,7 @@ export default function LoginPage() {
       )
       
       // 跳转到首页（漩涡页面）
-      window.location.href = 'http://localhost:3847'
+      window.location.href = HOMEPAGE_URL
     } catch (err) {
       setError(getErrorMessage(err))
     } finally {
@@ -105,7 +108,7 @@ export default function LoginPage() {
         }}
       >
         {/* Logo */}
-        <Link href="http://localhost:3847" className="flex items-center gap-2">
+        <Link href={HOMEPAGE_URL} className="flex items-center gap-2">
           <div className="grid grid-cols-2 gap-1">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: colors.text }} />
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: colors.text }} />
@@ -130,14 +133,14 @@ export default function LoginPage() {
         {/* 导航链接 */}
         <div className="hidden sm:flex items-center gap-4">
           <a 
-            href="http://localhost:3847#sectionExpression" 
+            href={`${HOMEPAGE_URL}#sectionExpression`}
             className="text-sm transition-colors duration-300 hover:opacity-80"
             style={{ color: colors.textSecondary }}
           >
             关于元征
           </a>
           <a 
-            href="http://localhost:3847#sectionSearch" 
+            href={`${HOMEPAGE_URL}#sectionSearch`}
             className="text-sm transition-colors duration-300 hover:opacity-80"
             style={{ color: colors.textSecondary }}
           >
@@ -147,7 +150,7 @@ export default function LoginPage() {
 
         {/* 返回首页 */}
         <a 
-          href="http://localhost:3847"
+          href={HOMEPAGE_URL}
           className="text-sm py-2 px-4 transition-all duration-300 hover:border-white"
           style={{ 
             color: colors.text,
