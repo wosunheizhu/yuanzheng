@@ -1106,7 +1106,7 @@ export default function AdminPage() {
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span style={{ color: colors.text }}>
-                            {tx.from_user?.name || '系统'} → {tx.to_user?.name}
+                            {tx.from_user_name || '系统'} → {tx.to_user_name}
                           </span>
                           <span
                             className="text-xs px-2 py-0.5 rounded-full"
