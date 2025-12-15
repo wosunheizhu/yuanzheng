@@ -390,8 +390,8 @@ export default function AdminPage() {
         return
       }
       try {
-        const users = await userService.list({ search: userSearchQuery })
-        setUserSearchResults(users || [])
+        const response = await userService.list({ search: userSearchQuery })
+        setUserSearchResults(response.items || [])
       } catch (err) {
         console.error('Failed to search users:', err)
       }
