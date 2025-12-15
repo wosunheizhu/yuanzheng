@@ -400,6 +400,7 @@ export interface DashboardStats {
   tokens: { total_balance: number; pending_transactions: number }
   resources: { total: number }
   value: { total: number; currency: string }
+  feedback?: { pending: number; total: number }
 }
 
 // ============ 认证服务 ============
