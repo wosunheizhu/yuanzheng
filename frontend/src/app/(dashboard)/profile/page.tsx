@@ -340,7 +340,7 @@ export default function ProfilePage() {
             >
               {profile.avatar_url ? (
                 <img 
-                  src={profile.avatar_url.startsWith('http') ? profile.avatar_url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${profile.avatar_url}`} 
+                  src={profile.avatar_url.startsWith('http') ? profile.avatar_url : `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1').replace('/api/v1', '')}${profile.avatar_url}`} 
                   alt={profile.name}
                   className="w-full h-full rounded-full object-cover"
                 />

@@ -738,10 +738,10 @@ export default function AdminPage() {
     }
   }
 
-  // 回复反馈
+  // 回复反馈（回复内容可选，可以只标记状态）
   const handleReplyFeedback = async () => {
-    if (!selectedFeedback || !replyForm.reply) {
-      toast.error('请填写回复内容')
+    if (!selectedFeedback) {
+      toast.error('请选择反馈')
       return
     }
     
@@ -755,24 +755,24 @@ export default function AdminPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          reply: replyForm.reply,
+          reply: replyForm.reply || null,  // 回复内容可选
           status: replyForm.status
         })
       })
       
       if (response.ok) {
-        toast.success('回复成功')
+        toast.success(replyForm.reply ? '回复成功' : '状态已更新')
         setShowReplyForm(false)
         setSelectedFeedback(null)
         setReplyForm({ reply: '', status: 'RESOLVED' })
         // 刷新反馈列表
         setFeedbacks(prev => prev.map(f => 
           f.id === selectedFeedback.id 
-            ? { ...f, status: replyForm.status, admin_reply: replyForm.reply }
+            ? { ...f, status: replyForm.status, admin_reply: replyForm.reply || f.admin_reply }
             : f
         ))
       } else {
-        toast.error('回复失败')
+        toast.error('操作失败')
       }
     } catch (err: any) {
       toast.error(getErrorMessage(err))
@@ -2141,12 +2141,12 @@ export default function AdminPage() {
               {/* 回复内容 */}
               <div>
                 <label className="block text-sm mb-2" style={{ color: colors.textSecondary }}>
-                  回复内容 *
+                  回复内容（可选）
                 </label>
                 <textarea
                   value={replyForm.reply}
                   onChange={(e) => setReplyForm({ ...replyForm, reply: e.target.value })}
-                  placeholder="请输入回复内容..."
+                  placeholder="可选：输入回复内容，或直接更新状态..."
                   rows={4}
                   className="w-full px-4 py-3 rounded-lg outline-none resize-none"
                   style={{
@@ -2187,7 +2187,7 @@ export default function AdminPage() {
               {/* 提交按钮 */}
               <button
                 onClick={handleReplyFeedback}
-                disabled={replySubmitting || !replyForm.reply}
+                disabled={replySubmitting}
                 className="w-full py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                 style={{
                   background: colors.success,
@@ -2199,7 +2199,7 @@ export default function AdminPage() {
                 ) : (
                   <>
                     <Send size={18} />
-                    发送回复
+                    {replyForm.reply ? '发送回复' : '更新状态'}
                   </>
                 )}
               </button>

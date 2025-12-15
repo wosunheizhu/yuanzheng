@@ -517,18 +517,21 @@ def reply_feedback(
             detail="反馈不存在"
         )
     
-    feedback.admin_reply = reply_in.reply
+    if reply_in.reply:
+        feedback.admin_reply = reply_in.reply
     feedback.admin_user_id = current_user.id
     feedback.admin_replied_at = datetime.utcnow()
     feedback.status = reply_in.status
     feedback.updated_at = datetime.utcnow()
     
     # 通知反馈人
+    status_text = "已解决" if reply_in.status == FeedbackStatus.RESOLVED else "已处理"
+    inbox_content = reply_in.reply[:200] if reply_in.reply else f"您的反馈已被标记为{status_text}"
     inbox_item = InboxItem(
         user_id=feedback.user_id,
         category=InboxCategory.SYSTEM,
-        title=f"您的反馈「{feedback.title}」已得到回复",
-        content=reply_in.reply[:200],
+        title=f"您的反馈「{feedback.title}」已{status_text}",
+        content=inbox_content,
         related_object_type="FEEDBACK",
         related_object_id=feedback_id,
         is_read=False,

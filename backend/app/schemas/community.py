@@ -122,7 +122,7 @@ class FeedbackRead(BaseModel):
 
 class FeedbackReply(BaseModel):
     """管理员回复反馈"""
-    reply: str = Field(..., min_length=1)
+    reply: Optional[str] = Field(None)  # 回复内容可选，允许只标记状态
     status: FeedbackStatus = FeedbackStatus.RESOLVED
 
 
