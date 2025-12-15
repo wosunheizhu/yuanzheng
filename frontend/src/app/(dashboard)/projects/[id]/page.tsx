@@ -1779,135 +1779,196 @@ export default function ProjectDetailPage() {
         </p>
       </footer>
 
-      {/* 加入项目模态框 */}
+      {/* 加入项目模态框 - 高端简约现代艺术画廊风格 */}
       {showJoinModal && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(8px)' }}
+          style={{ background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)' }}
           onClick={(e) => e.target === e.currentTarget && setShowJoinModal(false)}
         >
           <div 
-            className="w-full max-w-lg rounded-2xl p-6"
+            className="w-full max-w-md"
             style={{ 
-              background: 'rgba(20, 20, 20, 0.95)',
-              border: `1px solid ${colors.border}`,
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+              background: '#0a0a0a',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '2px',
             }}
           >
             {/* 模态框头部 */}
-            <div className="flex items-center justify-between mb-6">
+            <div 
+              className="px-8 py-6 flex items-start justify-between"
+              style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}
+            >
               <div>
-                <h2 className="text-xl font-semibold" style={{ color: colors.text }}>
+                <h2 
+                  className="text-lg tracking-wide"
+                  style={{ 
+                    color: colors.text,
+                    fontFamily: "'Noto Serif SC', serif",
+                    fontWeight: 400,
+                    letterSpacing: '0.05em'
+                  }}
+                >
                   加入项目
                 </h2>
-                <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
+                <p 
+                  className="text-xs mt-2 tracking-wide"
+                  style={{ color: 'rgba(255, 255, 255, 0.4)', fontWeight: 300 }}
+                >
                   申请加入「{project.name}」
                 </p>
               </div>
               <button
                 onClick={() => setShowJoinModal(false)}
-                className="p-2 rounded-full transition-colors hover:bg-white/10"
-                style={{ color: colors.textSecondary }}
+                className="p-1.5 transition-all hover:opacity-60"
+                style={{ color: 'rgba(255, 255, 255, 0.3)' }}
               >
-                <X size={20} />
+                <X size={18} strokeWidth={1} />
               </button>
             </div>
 
             {/* 成功提示 */}
             {joinSuccess ? (
-              <div className="text-center py-8">
+              <div className="px-8 py-12 text-center">
                 <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-                  style={{ background: 'rgba(74, 222, 128, 0.1)' }}
+                  className="w-14 h-14 flex items-center justify-center mx-auto mb-5"
+                  style={{ 
+                    border: '1px solid rgba(74, 222, 128, 0.3)',
+                    borderRadius: '2px'
+                  }}
                 >
-                  <CheckCircle size={32} style={{ color: '#4ade80' }} />
+                  <CheckCircle size={24} strokeWidth={1} style={{ color: 'rgba(74, 222, 128, 0.8)' }} />
                 </div>
-                <h3 className="text-lg font-medium mb-2" style={{ color: colors.text }}>
+                <h3 
+                  className="text-sm tracking-wide mb-2"
+                  style={{ color: colors.text, fontWeight: 400 }}
+                >
                   申请已提交
                 </h3>
-                <p className="text-sm" style={{ color: colors.textSecondary }}>
-                  项目负责人将审核您的申请，请耐心等待
+                <p 
+                  className="text-xs"
+                  style={{ color: 'rgba(255, 255, 255, 0.4)', fontWeight: 300 }}
+                >
+                  项目负责人将审核您的申请
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleJoinSubmit} className="space-y-5">
+              <form onSubmit={handleJoinSubmit} className="px-8 py-6 space-y-6">
                 {/* 错误提示 */}
                 {joinError && (
                   <div 
-                    className="p-3 rounded-lg flex items-center gap-2 text-sm"
-                    style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}
+                    className="px-4 py-3 flex items-center gap-3 text-xs"
+                    style={{ 
+                      background: 'rgba(239, 68, 68, 0.05)', 
+                      border: '1px solid rgba(239, 68, 68, 0.2)',
+                      borderRadius: '2px',
+                      color: 'rgba(239, 68, 68, 0.9)' 
+                    }}
                   >
-                    <AlertCircle size={16} />
+                    <AlertCircle size={14} strokeWidth={1.5} />
                     {joinError}
                   </div>
                 )}
 
-                {/* 加入后身份 - 必填 */}
+                {/* 加入后身份 */}
                 <div>
-                  <label className="block text-sm font-medium mb-2" style={{ color: colors.text }}>
-                    加入后身份 <span className="text-red-500">*</span>
+                  <label 
+                    className="block text-xs tracking-wide mb-3"
+                    style={{ color: 'rgba(255, 255, 255, 0.5)', fontWeight: 400, letterSpacing: '0.1em' }}
+                  >
+                    加入后身份 <span style={{ color: 'rgba(239, 68, 68, 0.7)' }}>*</span>
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
                       onClick={() => setJoinForm(f => ({ ...f, desired_role: 'OWNER' }))}
-                      className="p-4 rounded-xl text-left transition-all"
+                      className="p-4 text-left transition-all"
                       style={{ 
                         background: joinForm.desired_role === 'OWNER' 
-                          ? 'rgba(251, 191, 36, 0.1)' 
-                          : 'rgba(255, 255, 255, 0.03)',
-                        border: `1px solid ${joinForm.desired_role === 'OWNER' ? '#fbbf24' : colors.border}`,
-                        color: joinForm.desired_role === 'OWNER' ? '#fbbf24' : colors.textSecondary
+                          ? 'rgba(255, 255, 255, 0.03)' 
+                          : 'transparent',
+                        border: `1px solid ${joinForm.desired_role === 'OWNER' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.06)'}`,
+                        borderRadius: '2px'
                       }}
                     >
-                      <div className="font-medium" style={{ color: joinForm.desired_role === 'OWNER' ? colors.text : colors.textSecondary }}>
+                      <div 
+                        className="text-sm mb-1"
+                        style={{ 
+                          color: joinForm.desired_role === 'OWNER' ? colors.text : 'rgba(255, 255, 255, 0.5)',
+                          fontWeight: 400
+                        }}
+                      >
                         负责人
                       </div>
-                      <p className="text-xs mt-1">负责项目决策与管理</p>
+                      <p 
+                        className="text-xs"
+                        style={{ color: 'rgba(255, 255, 255, 0.3)', fontWeight: 300 }}
+                      >
+                        负责项目决策与管理
+                      </p>
                     </button>
                     <button
                       type="button"
                       onClick={() => setJoinForm(f => ({ ...f, desired_role: 'MEMBER' }))}
-                      className="p-4 rounded-xl text-left transition-all"
+                      className="p-4 text-left transition-all"
                       style={{ 
                         background: joinForm.desired_role === 'MEMBER' 
-                          ? 'rgba(59, 130, 246, 0.1)' 
-                          : 'rgba(255, 255, 255, 0.03)',
-                        border: `1px solid ${joinForm.desired_role === 'MEMBER' ? '#3b82f6' : colors.border}`,
-                        color: joinForm.desired_role === 'MEMBER' ? '#3b82f6' : colors.textSecondary
+                          ? 'rgba(255, 255, 255, 0.03)' 
+                          : 'transparent',
+                        border: `1px solid ${joinForm.desired_role === 'MEMBER' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.06)'}`,
+                        borderRadius: '2px'
                       }}
                     >
-                      <div className="font-medium" style={{ color: joinForm.desired_role === 'MEMBER' ? colors.text : colors.textSecondary }}>
+                      <div 
+                        className="text-sm mb-1"
+                        style={{ 
+                          color: joinForm.desired_role === 'MEMBER' ? colors.text : 'rgba(255, 255, 255, 0.5)',
+                          fontWeight: 400
+                        }}
+                      >
                         普通成员
                       </div>
-                      <p className="text-xs mt-1">参与项目协作</p>
+                      <p 
+                        className="text-xs"
+                        style={{ color: 'rgba(255, 255, 255, 0.3)', fontWeight: 300 }}
+                      >
+                        参与项目协作
+                      </p>
                     </button>
                   </div>
                 </div>
 
-                {/* 加入后职责 - 必填 */}
+                {/* 加入后职责 */}
                 <div>
-                  <label className="block text-sm font-medium mb-2" style={{ color: colors.text }}>
-                    加入项目后职责 <span className="text-red-500">*</span>
+                  <label 
+                    className="block text-xs tracking-wide mb-3"
+                    style={{ color: 'rgba(255, 255, 255, 0.5)', fontWeight: 400, letterSpacing: '0.1em' }}
+                  >
+                    加入后职责 <span style={{ color: 'rgba(239, 68, 68, 0.7)' }}>*</span>
                   </label>
                   <textarea
                     value={joinForm.duty_description}
                     onChange={(e) => setJoinForm(f => ({ ...f, duty_description: e.target.value }))}
                     placeholder="请描述您加入后将负责的工作..."
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-all focus:outline-none focus:ring-2 focus:ring-white/20"
+                    className="w-full px-4 py-3 text-sm resize-none transition-all focus:outline-none"
                     style={{ 
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: `1px solid ${colors.border}`,
-                      color: colors.text
+                      background: 'transparent',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '2px',
+                      color: colors.text,
+                      fontWeight: 300
                     }}
                   />
                 </div>
 
-                {/* 意向获得股份 - 必填 */}
+                {/* 意向获得股份 */}
                 <div>
-                  <label className="block text-sm font-medium mb-2" style={{ color: colors.text }}>
-                    意向获得股份 <span className="text-red-500">*</span>
+                  <label 
+                    className="block text-xs tracking-wide mb-3"
+                    style={{ color: 'rgba(255, 255, 255, 0.5)', fontWeight: 400, letterSpacing: '0.1em' }}
+                  >
+                    意向获得股份 <span style={{ color: 'rgba(239, 68, 68, 0.7)' }}>*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -1918,54 +1979,69 @@ export default function ProjectDetailPage() {
                       value={joinForm.intended_share_pct}
                       onChange={(e) => setJoinForm(f => ({ ...f, intended_share_pct: e.target.value }))}
                       placeholder="例如：5"
-                      className="w-full px-4 py-3 pr-12 rounded-xl text-sm transition-all focus:outline-none focus:ring-2 focus:ring-white/20"
+                      className="w-full px-4 py-3 pr-10 text-sm transition-all focus:outline-none"
                       style={{ 
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        border: `1px solid ${colors.border}`,
-                        color: colors.text
+                        background: 'transparent',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '2px',
+                        color: colors.text,
+                        fontWeight: 300
                       }}
                     />
                     <span 
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-sm"
-                      style={{ color: colors.textSecondary }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-xs"
+                      style={{ color: 'rgba(255, 255, 255, 0.3)' }}
                     >
                       %
                     </span>
                   </div>
-                  <p className="text-xs mt-1.5" style={{ color: colors.textSecondary }}>
+                  <p 
+                    className="text-xs mt-2"
+                    style={{ color: 'rgba(255, 255, 255, 0.3)', fontWeight: 300 }}
+                  >
                     元征固定持有 51%，剩余 49% 由合伙人分配
                   </p>
                 </div>
 
-                {/* 备注 - 可选 */}
+                {/* 备注 */}
                 <div>
-                  <label className="block text-sm font-medium mb-2" style={{ color: colors.text }}>
-                    备注 <span style={{ color: colors.textSecondary }}>（可选）</span>
+                  <label 
+                    className="block text-xs tracking-wide mb-3"
+                    style={{ color: 'rgba(255, 255, 255, 0.5)', fontWeight: 400, letterSpacing: '0.1em' }}
+                  >
+                    备注 <span style={{ color: 'rgba(255, 255, 255, 0.3)', fontWeight: 300 }}>（可选）</span>
                   </label>
                   <textarea
                     value={joinForm.note}
                     onChange={(e) => setJoinForm(f => ({ ...f, note: e.target.value }))}
                     placeholder="其他补充说明..."
                     rows={2}
-                    className="w-full px-4 py-3 rounded-xl text-sm resize-none transition-all focus:outline-none focus:ring-2 focus:ring-white/20"
+                    className="w-full px-4 py-3 text-sm resize-none transition-all focus:outline-none"
                     style={{ 
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: `1px solid ${colors.border}`,
-                      color: colors.text
+                      background: 'transparent',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '2px',
+                      color: colors.text,
+                      fontWeight: 300
                     }}
                   />
                 </div>
 
                 {/* 提交按钮 */}
-                <div className="flex items-center gap-3 pt-2">
+                <div 
+                  className="flex items-center gap-3 pt-4"
+                  style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}
+                >
                   <button
                     type="button"
                     onClick={() => setShowJoinModal(false)}
-                    className="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all"
+                    className="flex-1 py-3 text-xs tracking-widest uppercase transition-all hover:opacity-70"
                     style={{ 
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      color: colors.textSecondary,
-                      border: `1px solid ${colors.border}`
+                      background: 'transparent',
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '2px',
+                      fontWeight: 400
                     }}
                   >
                     取消
@@ -1973,17 +2049,19 @@ export default function ProjectDetailPage() {
                   <button
                     type="submit"
                     disabled={joinSubmitting}
-                    className="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2"
+                    className="flex-1 py-3 text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 hover:opacity-90"
                     style={{ 
-                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                      color: '#fff',
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      color: '#000',
+                      borderRadius: '2px',
+                      fontWeight: 500,
                       opacity: joinSubmitting ? 0.6 : 1
                     }}
                   >
                     {joinSubmitting ? (
                       <>
-                        <Loader2 size={16} className="animate-spin" />
-                        提交中...
+                        <Loader2 size={14} className="animate-spin" />
+                        提交中
                       </>
                     ) : (
                       '提交申请'
