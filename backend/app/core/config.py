@@ -46,8 +46,8 @@ class Settings(BaseSettings):
     
     # 超级管理员账号（不依赖数据库，用于空数据库初始化）
     # 通过环境变量设置：SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD
-    SUPER_ADMIN_EMAIL: Optional[str] = None
-    SUPER_ADMIN_PASSWORD: Optional[str] = None
+    SUPER_ADMIN_EMAIL: str = "admin@yuanzheng.com"
+    SUPER_ADMIN_PASSWORD: str = "YuanZheng2024!"
     SUPER_ADMIN_NAME: str = "超级管理员"
     
     class Config:
