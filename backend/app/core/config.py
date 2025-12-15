@@ -26,8 +26,15 @@ class Settings(BaseSettings):
     # Redis 配置（可选，用于缓存）
     REDIS_URL: Optional[str] = None
     
-    # CORS 配置
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:3847"]
+    # CORS 配置 - 使用逗号分隔的字符串，如 "http://localhost:3000,http://localhost:3847" 或 "*"
+    CORS_ORIGINS_STR: str = "http://localhost:3000,http://localhost:3847"
+    
+    @property
+    def CORS_ORIGINS(self) -> list[str]:
+        """解析 CORS 源列表"""
+        if self.CORS_ORIGINS_STR == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.CORS_ORIGINS_STR.split(",") if origin.strip()]
     
     # Token 初始额度配置（按角色层级）
     TOKEN_INITIAL_FOUNDING: int = 100000  # 联合创始人
