@@ -428,6 +428,19 @@ export const authService = {
       new_password: newPassword
     })
   },
+  
+  selfRegister: async (data: {
+    name: string
+    email: string
+    phone: string
+    password: string
+    organization?: string
+    role_type: string
+    invitation_code: string
+  }): Promise<User> => {
+    const response = await apiClient.post('/auth/self-register', data)
+    return response.data
+  },
 }
 
 // ============ Token 服务 ============

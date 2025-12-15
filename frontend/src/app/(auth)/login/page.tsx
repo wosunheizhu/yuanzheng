@@ -296,26 +296,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* 分隔线 */}
-        <div className="flex items-center gap-4 my-8">
-          <div className="flex-1 h-px" style={{ background: colors.border }} />
-          <span className="text-xs" style={{ color: colors.textSecondary }}>或</span>
-          <div className="flex-1 h-px" style={{ background: colors.border }} />
-        </div>
-
-        {/* 验证码登录 */}
-        <Link
-          href="/login/code"
-          className="w-full flex items-center justify-center py-4 font-medium text-sm transition-all duration-300 hover:border-white hover:bg-white/5"
-          style={{ 
-            color: colors.text,
-            border: `1px solid ${colors.border}`,
-            borderRadius: '50px'
-          }}
-        >
-          使用验证码登录
-        </Link>
-
         {/* 底部提示 */}
         <p 
           className="text-center mt-8 text-sm"

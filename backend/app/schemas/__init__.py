@@ -2,7 +2,7 @@
 
 from app.schemas.user import (
     UserCreate, UserUpdate, UserRead, UserLogin,
-    RoleRead, Token, TokenPayload
+    RoleRead, Token, TokenPayload, SelfRegister, PasswordChange
 )
 from app.schemas.token_account import (
     TokenAccountRead, TokenTransactionCreate,
@@ -59,7 +59,7 @@ from app.schemas.admin import (
 __all__ = [
     # User
     "UserCreate", "UserUpdate", "UserRead", "UserLogin",
-    "RoleRead", "Token", "TokenPayload",
+    "RoleRead", "Token", "TokenPayload", "SelfRegister", "PasswordChange",
     
     # Token Account
     "TokenAccountRead", "TokenTransactionCreate",

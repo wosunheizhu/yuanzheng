@@ -60,6 +60,21 @@ class UserCreate(BaseModel):
     )
 
 
+class SelfRegister(BaseModel):
+    """用户自助注册"""
+    name: str = Field(..., min_length=1, max_length=100, description="姓名")
+    email: EmailStr = Field(..., description="邮箱")
+    phone: str = Field(..., max_length=20, description="手机号")
+    password: str = Field(..., min_length=6, description="密码")
+    organization: Optional[str] = Field(None, max_length=255, description="所属组织")
+    role_type: str = Field(
+        "NORMAL",
+        description="申请角色: FOUNDING/CORE/NORMAL",
+        pattern="^(FOUNDING|CORE|NORMAL)$"
+    )
+    invitation_code: str = Field(..., description="邀请码")
+
+
 class UserUpdate(BaseModel):
     """用户更新（个人信息表单）- 所有字段可选"""
     name: Optional[str] = Field(None, min_length=1, max_length=100, description="姓名")

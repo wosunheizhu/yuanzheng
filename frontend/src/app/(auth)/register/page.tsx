@@ -7,6 +7,7 @@ import { gsap } from 'gsap'
 import { Eye, EyeOff, ArrowRight, AlertCircle, User, Mail, Phone, Building2, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import { getErrorMessage } from '@/lib/api'
+import { authService } from '@/lib/services'
 
 // Homepage URL
 const HOMEPAGE_URL = process.env.NEXT_PUBLIC_HOMEPAGE_URL || 'http://localhost:3847'
@@ -121,11 +122,16 @@ export default function RegisterPage() {
     setError('')
     
     try {
-      // TODO: 调用注册 API
-      // const response = await authService.register(formData)
-      
-      // 模拟注册成功
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // 调用自助注册 API
+      await authService.selfRegister({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        organization: formData.organization || undefined,
+        role_type: formData.role_type,
+        invitation_code: formData.invitation_code,
+      })
       
       setStep(3)
       toast.success('注册成功！')

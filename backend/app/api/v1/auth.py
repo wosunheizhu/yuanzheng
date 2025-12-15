@@ -15,7 +15,7 @@ from app.models.user import User, Role, UserRole
 from app.models.token import TokenAccount
 from app.schemas.user import (
     UserCreate, UserRead, UserLogin, Token,
-    PasswordChange, RoleRead
+    PasswordChange, RoleRead, SelfRegister
 )
 
 router = APIRouter(prefix="/auth", tags=["认证"])
@@ -244,6 +244,97 @@ def register_user(
     
     # 创建 Token 账户
     initial_balance = get_initial_balance(user_in.role_code)
+    token_account = TokenAccount(
+        user_id=user.id,
+        balance=initial_balance,
+        initial_balance=initial_balance,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    db.add(token_account)
+    
+    db.commit()
+    db.refresh(user)
+    
+    user_read = UserRead.model_validate(user)
+    user_read.highest_role_level = user.highest_role_level
+    return user_read
+
+
+@router.post("/self-register", response_model=UserRead)
+def self_register(
+    user_in: SelfRegister,
+    db: Session = Depends(get_db)
+):
+    """
+    用户自助注册（公开接口，需要邀请码）
+    
+    正确邀请码：20251216
+    """
+    # 验证邀请码
+    VALID_INVITATION_CODE = "20251216"
+    if user_in.invitation_code != VALID_INVITATION_CODE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="邀请码无效"
+        )
+    
+    # 检查邮箱是否已存在
+    existing = db.query(User).filter(
+        User.email == user_in.email,
+        User.is_deleted == False
+    ).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="邮箱已被使用"
+        )
+    
+    # 检查手机号是否已存在
+    existing = db.query(User).filter(
+        User.phone == user_in.phone,
+        User.is_deleted == False
+    ).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="手机号已被使用"
+        )
+    
+    # 获取角色（根据申请的角色类型，默认为普通合伙人）
+    role_code = user_in.role_type or "NORMAL"
+    role = db.query(Role).filter(Role.code == role_code).first()
+    if not role:
+        # 如果申请的角色不存在，默认使用普通合伙人
+        role = db.query(Role).filter(Role.code == "NORMAL").first()
+    
+    if not role:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="系统角色配置错误，请联系管理员"
+        )
+    
+    # 创建用户
+    user = User(
+        name=user_in.name,
+        email=user_in.email,
+        phone=user_in.phone,
+        organization=user_in.organization,
+        hashed_password=get_password_hash(user_in.password),
+        is_active=True,
+        is_admin=False,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    db.add(user)
+    db.flush()  # 获取 user.id
+    
+    # 分配角色
+    user_role = UserRole(user_id=user.id, role_id=role.id)
+    db.add(user_role)
+    
+    # 创建 Token 账户
+    initial_balance = get_initial_balance(role_code)
     token_account = TokenAccount(
         user_id=user.id,
         balance=initial_balance,
