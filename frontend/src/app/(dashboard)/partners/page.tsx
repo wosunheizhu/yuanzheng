@@ -17,6 +17,14 @@ const colors = {
   normalPartner: '#22c55e',
 }
 
+// 获取完整的头像 URL
+const getAvatarUrl = (avatarUrl?: string): string | null => {
+  if (!avatarUrl) return null
+  if (avatarUrl.startsWith('http')) return avatarUrl
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  return `${apiBase.replace('/api/v1', '')}${avatarUrl}`
+}
+
 // 合伙人数据
 interface Partner {
   id: number
@@ -700,15 +708,15 @@ export default function PartnersPage() {
               <div 
                 className="w-28 h-28 mx-auto mb-8 flex items-center justify-center"
                 style={{ 
-                  background: selectedPartner.avatar 
-                    ? `url(${selectedPartner.avatar})` 
+                  background: getAvatarUrl(selectedPartner.avatar) 
+                    ? `url(${getAvatarUrl(selectedPartner.avatar)})` 
                     : 'rgba(255, 255, 255, 0.03)',
                   backgroundSize: 'cover',
                   border: `1px solid ${getRoleBorderColor(selectedPartner.role)}`,
                   borderRadius: '50%',
                 }}
               >
-                {!selectedPartner.avatar && (
+                {!getAvatarUrl(selectedPartner.avatar) && (
                   <span style={{ 
                     fontSize: '42px', 
                     fontWeight: 300, 
@@ -1001,14 +1009,14 @@ export default function PartnersPage() {
                           <div 
                             className="w-14 h-14 rounded-full flex items-center justify-center shrink-0"
                             style={{ 
-                              background: partner.avatar 
-                                ? `url(${partner.avatar})` 
+                              background: getAvatarUrl(partner.avatar) 
+                                ? `url(${getAvatarUrl(partner.avatar)})` 
                                 : 'rgba(255, 255, 255, 0.03)',
                               backgroundSize: 'cover',
                               border: `1px solid ${colors.coFounder}60`,
                             }}
                           >
-                            {!partner.avatar && (
+                            {!getAvatarUrl(partner.avatar) && (
                               <span style={{ 
                                 color: colors.text, 
                                 fontSize: '20px', 
@@ -1093,14 +1101,14 @@ export default function PartnersPage() {
                           <div 
                             className="w-14 h-14 rounded-full flex items-center justify-center shrink-0"
                             style={{ 
-                              background: partner.avatar 
-                                ? `url(${partner.avatar})` 
+                              background: getAvatarUrl(partner.avatar) 
+                                ? `url(${getAvatarUrl(partner.avatar)})` 
                                 : 'rgba(255, 255, 255, 0.03)',
                               backgroundSize: 'cover',
                               border: `1px solid ${colors.corePartner}60`,
                             }}
                           >
-                            {!partner.avatar && (
+                            {!getAvatarUrl(partner.avatar) && (
                               <span style={{ 
                                 color: colors.text, 
                                 fontSize: '20px', 
@@ -1185,14 +1193,14 @@ export default function PartnersPage() {
                           <div 
                             className="w-14 h-14 rounded-full flex items-center justify-center shrink-0"
                             style={{ 
-                              background: partner.avatar 
-                                ? `url(${partner.avatar})` 
+                              background: getAvatarUrl(partner.avatar) 
+                                ? `url(${getAvatarUrl(partner.avatar)})` 
                                 : 'rgba(255, 255, 255, 0.03)',
                               backgroundSize: 'cover',
                               border: `1px solid ${colors.normalPartner}60`,
                             }}
                           >
-                            {!partner.avatar && (
+                            {!getAvatarUrl(partner.avatar) && (
                               <span style={{ 
                                 color: colors.text, 
                                 fontSize: '20px', 

@@ -56,6 +56,14 @@ const colors = {
   warning: '#f59e0b',
 }
 
+// 获取完整的头像 URL
+const getAvatarUrl = (avatarUrl?: string): string | null => {
+  if (!avatarUrl) return null
+  if (avatarUrl.startsWith('http')) return avatarUrl
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  return `${apiBase.replace('/api/v1', '')}${avatarUrl}`
+}
+
 // 帖子类型映射（移除投票类型）
 const postTypeLabels: Record<string, { label: string; color: string }> = {
   'GENERAL': { label: '动态', color: colors.textSecondary },
@@ -832,8 +840,8 @@ export default function CommunityPage() {
                               color: colors.text
                             }}
                           >
-                            {user.avatar_url ? (
-                              <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+                            {getAvatarUrl(user.avatar_url) ? (
+                              <img src={getAvatarUrl(user.avatar_url)!} alt="" className="w-full h-full object-cover" />
                             ) : (
                               user.name?.charAt(0) || '?'
                             )}

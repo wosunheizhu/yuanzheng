@@ -51,6 +51,14 @@ const colors = {
   theirBubbleBorder: 'rgba(255, 255, 255, 0.1)'
 }
 
+// 获取完整的头像 URL
+const getAvatarUrl = (avatarUrl?: string): string | null => {
+  if (!avatarUrl) return null
+  if (avatarUrl.startsWith('http')) return avatarUrl
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  return `${apiBase.replace('/api/v1', '')}${avatarUrl}`
+}
+
 // 会话线程接口
 interface DMThread {
   id: number
@@ -635,14 +643,22 @@ export default function MessagesPage() {
                       {/* 头像 */}
                       <div className="relative">
                         <div 
-                          className="w-12 h-12 flex items-center justify-center text-sm font-light"
+                          className="w-12 h-12 flex items-center justify-center text-sm font-light overflow-hidden"
                           style={{ 
                             border: `1px solid ${colors.border}`,
                             color: colors.textSecondary,
                             background: colors.bgCard
                           }}
                         >
-                          {getInitials(thread.other_user_name)}
+                          {getAvatarUrl(thread.other_user_avatar) ? (
+                            <img 
+                              src={getAvatarUrl(thread.other_user_avatar)!}
+                              alt={thread.other_user_name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            getInitials(thread.other_user_name)
+                          )}
                         </div>
                         {thread.is_online && (
                           <div 
@@ -731,14 +747,22 @@ export default function MessagesPage() {
                     {/* 头像 */}
                     <div className="relative">
                       <div 
-                        className="w-11 h-11 flex items-center justify-center text-sm font-light"
+                        className="w-11 h-11 flex items-center justify-center text-sm font-light overflow-hidden"
                         style={{ 
                           border: `1px solid ${colors.border}`,
                           color: colors.textSecondary,
                           background: colors.bgCard
                         }}
                       >
-                        {getInitials(selectedThread.other_user_name)}
+                        {getAvatarUrl(selectedThread.other_user_avatar) ? (
+                          <img 
+                            src={getAvatarUrl(selectedThread.other_user_avatar)!}
+                            alt={selectedThread.other_user_name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          getInitials(selectedThread.other_user_name)
+                        )}
                       </div>
                       {selectedThread.is_online && (
                         <div 
@@ -827,14 +851,22 @@ export default function MessagesPage() {
                               <div className={`flex items-start gap-3 max-w-[75%] ${isMe ? 'flex-row-reverse' : ''}`}>
                                 {/* 头像 - 始终显示 */}
                                 <div 
-                                  className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-sm font-light"
+                                  className="w-10 h-10 flex-shrink-0 flex items-center justify-center text-sm font-light overflow-hidden"
                                   style={{ 
                                     border: `1px solid ${colors.border}`,
                                     color: colors.textMuted,
                                     background: colors.bgCard
                                   }}
                                 >
-                                  {isMe ? getInitials(user?.name || '我') : getInitials(selectedThread.other_user_name)}
+                                  {isMe ? (
+                                    getAvatarUrl(user?.avatar_url) ? (
+                                      <img src={getAvatarUrl(user?.avatar_url)!} alt="我" className="w-full h-full object-cover" />
+                                    ) : getInitials(user?.name || '我')
+                                  ) : (
+                                    getAvatarUrl(selectedThread.other_user_avatar) ? (
+                                      <img src={getAvatarUrl(selectedThread.other_user_avatar)!} alt={selectedThread.other_user_name} className="w-full h-full object-cover" />
+                                    ) : getInitials(selectedThread.other_user_name)
+                                  )}
                                 </div>
                                 
                                 <div className="flex-1 min-w-0">

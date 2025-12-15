@@ -64,8 +64,78 @@ export default function ProfilePage() {
     confirmPassword: '',
   })
   const [passwordSaving, setPasswordSaving] = useState(false)
+  
+  // 头像上传
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const avatarInputRef = useRef<HTMLInputElement>(null)
 
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  // 处理头像上传
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    
+    // 验证文件类型
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('请上传 JPG、PNG、GIF 或 WEBP 格式的图片')
+      return
+    }
+    
+    // 验证文件大小 (最大 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('图片大小不能超过 5MB')
+      return
+    }
+    
+    setUploadingAvatar(true)
+    
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      // 上传文件
+      const uploadResponse = await fetch(`${API_URL}/uploads`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: formData
+      })
+      
+      if (!uploadResponse.ok) {
+        throw new Error('上传失败')
+      }
+      
+      const uploadData = await uploadResponse.json()
+      const avatarUrl = uploadData.url
+      
+      // 更新用户头像
+      const updatedProfile = await userService.updateProfile({ avatar_url: avatarUrl })
+      setProfile(updatedProfile)
+      
+      // 更新全局用户状态
+      if (authUser) {
+        setUser({
+          ...authUser,
+          avatar_url: avatarUrl
+        })
+      }
+      
+      toast.success('头像更新成功')
+    } catch (err) {
+      console.error('Avatar upload failed:', err)
+      toast.error(getErrorMessage(err) || '头像上传失败')
+    } finally {
+      setUploadingAvatar(false)
+      // 清除 input 值以便重新选择同一文件
+      if (avatarInputRef.current) {
+        avatarInputRef.current.value = ''
+      }
+    }
+  }
 
   // 加载用户资料
   useEffect(() => {
@@ -263,14 +333,14 @@ export default function ProfilePage() {
           {/* 头像 */}
           <div className="relative">
             <div 
-              className="w-24 h-24 rounded-full flex items-center justify-center"
+              className="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
               style={{
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
               }}
             >
               {profile.avatar_url ? (
                 <img 
-                  src={profile.avatar_url} 
+                  src={profile.avatar_url.startsWith('http') ? profile.avatar_url : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${profile.avatar_url}`} 
                   alt={profile.name}
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -280,14 +350,29 @@ export default function ProfilePage() {
                 </span>
               )}
             </div>
+            {/* 隐藏的文件输入 */}
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+              onChange={handleAvatarUpload}
+              className="hidden"
+            />
             <button 
-              className="absolute bottom-0 right-0 p-2 rounded-full transition-colors"
+              onClick={() => avatarInputRef.current?.click()}
+              disabled={uploadingAvatar}
+              className="absolute bottom-0 right-0 p-2 rounded-full transition-colors hover:bg-white/10"
               style={{
                 background: 'rgba(30,30,30,0.9)',
                 border: `1px solid ${colors.border}`,
               }}
+              title="上传头像"
             >
-              <Camera size={14} style={{ color: colors.textSecondary }} />
+              {uploadingAvatar ? (
+                <Loader2 size={14} className="animate-spin" style={{ color: colors.textSecondary }} />
+              ) : (
+                <Camera size={14} style={{ color: colors.textSecondary }} />
+              )}
             </button>
           </div>
 
