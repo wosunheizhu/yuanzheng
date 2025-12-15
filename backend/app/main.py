@@ -14,6 +14,8 @@ async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     # 启动时执行
     print(f"🚀 {settings.APP_NAME} v{settings.APP_VERSION} 启动中...")
+    print(f"📋 CORS Origins: {settings.CORS_ORIGINS}")
+    print(f"📋 CORS Origins STR: {settings.CORS_ORIGINS_STR}")
     yield
     # 关闭时执行
     print(f"👋 {settings.APP_NAME} 关闭中...")
