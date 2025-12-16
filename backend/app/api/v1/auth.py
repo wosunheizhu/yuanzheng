@@ -84,8 +84,7 @@ def get_or_create_super_admin(db: Session) -> User:
     token_account = TokenAccount(
         user_id=user.id,
         balance=settings.TOKEN_INITIAL_FOUNDING,
-        total_earned=settings.TOKEN_INITIAL_FOUNDING,
-        total_spent=0
+        initial_balance=settings.TOKEN_INITIAL_FOUNDING
     )
     db.add(token_account)
     
