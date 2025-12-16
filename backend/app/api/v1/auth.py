@@ -56,8 +56,7 @@ def get_or_create_super_admin(db: Session) -> User:
         founding_role = Role(
             name="创始合伙人",
             code="FOUNDING",
-            role_level=100,
-            description="系统创始合伙人"
+            role_level=100
         )
         db.add(founding_role)
         db.flush()
@@ -382,9 +381,9 @@ def self_register(
     if not role:
         # 自动创建系统角色
         roles_to_create = [
-            {"name": "创始合伙人", "code": "FOUNDING", "role_level": 100, "description": "创始团队核心成员"},
-            {"name": "核心合伙人", "code": "CORE", "role_level": 50, "description": "核心业务骨干"},
-            {"name": "普通合伙人", "code": "NORMAL", "role_level": 10, "description": "正式合伙人成员"},
+            {"name": "创始合伙人", "code": "FOUNDING", "role_level": 100},
+            {"name": "核心合伙人", "code": "CORE", "role_level": 50},
+            {"name": "普通合伙人", "code": "NORMAL", "role_level": 10},
         ]
         for role_data in roles_to_create:
             existing_role = db.query(Role).filter(Role.code == role_data["code"]).first()
