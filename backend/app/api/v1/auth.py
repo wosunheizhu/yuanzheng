@@ -380,10 +380,23 @@ def self_register(
         role = db.query(Role).filter(Role.code == "NORMAL").first()
     
     if not role:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="系统角色配置错误，请联系管理员"
-        )
+        # 自动创建系统角色
+        roles_to_create = [
+            {"name": "创始合伙人", "code": "FOUNDING", "role_level": 100, "description": "创始团队核心成员"},
+            {"name": "核心合伙人", "code": "CORE", "role_level": 50, "description": "核心业务骨干"},
+            {"name": "普通合伙人", "code": "NORMAL", "role_level": 10, "description": "正式合伙人成员"},
+        ]
+        for role_data in roles_to_create:
+            existing_role = db.query(Role).filter(Role.code == role_data["code"]).first()
+            if not existing_role:
+                new_role = Role(**role_data)
+                db.add(new_role)
+        db.flush()
+        
+        # 重新获取角色
+        role = db.query(Role).filter(Role.code == role_code).first()
+        if not role:
+            role = db.query(Role).filter(Role.code == "NORMAL").first()
     
     # 创建用户
     user = User(
